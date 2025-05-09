@@ -1,0 +1,48 @@
+import pandas as pd
+import numpy as np
+
+student ={
+    'Student_id' : [1,2,3,4,5,6,7],
+    'Name':['A','B','C','D','E','F','G'],
+    'Age':[21,20,22,34,30,23,22],
+    'Marks':[50,70,56,78,None,150,56],
+    'Attedence' :[76,56,75,45,65,90,70]
+}
+df=pd.DataFrame(student)
+
+print(df)
+
+# missing values handling
+missing_values=df.isnull()
+
+print(df.describe())
+
+print(missing_values)
+
+df['Marks'] = df['Marks'].fillna(df['Marks'].mean())
+
+# Outlier handling
+
+def detect_outliers(col):
+    Q1 = df[col].quantile(0.25) #25%
+    Q3 = df[col].quantile(0.75) #75%
+
+    IQR = Q3 - Q1
+
+    lower = Q1 - 1.5 *IQR
+    upper = Q3 + 1.5 *IQR
+
+    return df[(df[col] < lower) | (df[col] >upper)]
+
+print("outliers in marks:-\n",detect_outliers('Marks'))
+
+median = df['Marks'].median()
+print("Median",median)
+df['Marks'] = np.where(df['Marks'] > 100 ,median,df['Marks'])
+print(df)
+
+# Log tranformation
+
+df['Attedence_log'] = np.log(df['Attedence'])
+
+print(df)

@@ -1,0 +1,66 @@
+import nltk
+import numpy as np
+from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+from nltk import pos_tag
+
+# Download necessary NLTK data files (only once)
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('wordnet')
+nltk.download('averaged_perceptron_tagger_eng')
+nltk.download('punkt_tab')
+nltk.download('averaged_perceptron_tagger')
+
+# Sample Document
+docs = ["Natural Language Processing is a fascinating field."]
+
+# Step 1: Preprocessing
+stop_words = set(stopwords.words("english"))
+stemmer = PorterStemmer()
+lemmatizer = WordNetLemmatizer()
+
+
+print("\n--- Document Preprocessing ---\n")
+
+print(f"Document 1: {docs[0]}")
+
+# Tokenization
+tokens = word_tokenize(docs[0])
+print("Tokens:", tokens)
+
+# POS Tagging
+pos_tags = pos_tag(tokens)
+print("POS Tags:", pos_tags)
+  
+# Stop Word Removal
+filtered_tokens = [w for w in tokens if w.lower() not in stop_words and w.isalpha()]
+print("Filtered Tokens:", filtered_tokens)
+    
+# Stemming
+stemmed = [stemmer.stem(w) for w in filtered_tokens]
+print("Stemmed:", stemmed)
+ 
+# Lemmatization
+lemmatized = [lemmatizer.lemmatize(w.lower()) for w in filtered_tokens]
+print("Lemmatized:", lemmatized)
+    
+print("\n")    
+
+# Step 2: TF (Term Frequency) using CountVectorizer
+vectorizer = CountVectorizer()
+X_tf = vectorizer.fit_transform(docs)
+
+print("--- Term Frequency (TF) ---")
+print("Vocabulary:", vectorizer.vocabulary_)
+print("TF Matrix:\n", X_tf.toarray())
+
+# Step 3: TF-Inverse Document Frequency
+tfidf = TfidfVectorizer()
+X_tfidf = tfidf.fit_transform(docs)
+
+print("\n--- TF-IDF ---")
+print("Vocabulary:", tfidf.vocabulary_)
+print("TF-IDF Matrix:\n", np.round(X_tfidf.toarray(), 3))

@@ -1,0 +1,82 @@
+#Step 1: Import Required Libraries 
+import pandas as pd 
+import numpy as np 
+import matplotlib.pyplot as plt 
+import seaborn as sns 
+from sklearn.model_selection import train_test_split 
+from sklearn.naive_bayes import GaussianNB 
+from sklearn.metrics import confusion_matrix, accuracy_score, precision_score, recall_score,classification_report 
+ 
+#Step 2: Load the Dataset 
+
+
+url = "https://raw.githubusercontent.com/kcncell/Iris_dataset/main/Irisdataset.csv"
+df = pd.read_csv(url)
+
+print(df.head())
+
+ 
+#Step 3: Split Features and Target 
+X = df.drop('Species', axis=1)   # Features 
+y = df['Species']     
+ 
+
+#Step 4: Split Data into Train and Test Sets 
+X_train, X_test, y_train, y_test = train_test_split( 
+    X, y, test_size=0.2, random_state=42) 
+ 
+#Step 5: Train Naïve Bayes Classifier 
+model = GaussianNB() 
+model.fit(X_train, y_train) 
+ 
+#Step 6: Make Predictions 
+y_pred = model.predict(X_test) 
+ 
+#Step 7: Evaluate the Model 
+cm = confusion_matrix(y_test, y_pred) 
+labels = model.classes_ 
+ 
+ 
+
+ 
+# Display Confusion Matrix 
+print("\nConfusion Matrix:\n", cm) 
+ 
+# Calculate metrics (multiclass-friendly) 
+accuracy = accuracy_score(y_test, y_pred) 
+error_rate = 1 - accuracy 
+precision = precision_score(y_test, y_pred, average='macro') 
+recall = recall_score(y_test, y_pred, average='macro') 
+ 
+print(f"\nAccuracy: {accuracy:.2f}") 
+print(f"Error Rate: {error_rate:.2f}") 
+print(f"Precision: {precision:.2f}") 
+print(f"Recall: {recall:.2f}") 
+ 
+# Extract TP, TN, FP, FN for each class (similar structure) 
+print("\nTrue Positives, False Positives, True Negatives, False Negatives per class:\n") 
+for i, label in enumerate(labels): 
+    TP = cm[i, i] 
+    FP = cm[:, i].sum() - TP 
+    FN = cm[i, :].sum() - TP 
+    TN = cm.sum() - (TP + FP + FN) 
+ 
+    print(f"Class: {label}") 
+    print(f"  ➤ TP: {TP}") 
+    print(f"  ➤ FP: {FP}") 
+    print(f"  ➤ FN: {FN}") 
+    print(f"  ➤ TN: {TN}\n") 
+ 
+#Step 8: Classification Report 
+print("\n   Classification Report:") 
+print(classification_report(y_test, y_pred)) 
+ 
+#Step 9: Plotting the Confusion Matrix 
+plt.figure(figsize=(6, 4)) 
+
+ 
+sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=labels, yticklabels=labels) 
+plt.title('Confusion Matrix - Iris Naïve Bayes') 
+plt.xlabel('Predicted Labels') 
+plt.ylabel('Actual Labels') 
+plt.show() 

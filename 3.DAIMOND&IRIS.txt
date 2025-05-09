@@ -1,0 +1,34 @@
+import pandas as pd
+import seaborn as sns
+
+import warnings
+warnings.filterwarnings('ignore')
+
+df = sns.load_dataset('diamonds')
+
+print(df.head())
+
+df.dropna(subset=['price','cut'])
+
+grouped_stats = df.groupby('cut')['price'].agg(['min','max','mean','median','std'])
+
+print("Statistics Summary of cut and price : \n",grouped_stats)
+
+avg_price_by_cut=df.groupby('cut')['price'].mean().to_dict()
+numeric_list = [avg_price_by_cut[cut] for cut in df['cut'] ]
+print("\nNumeric list (mapped average price by cut):")
+print(numeric_list[:10]) 
+
+#iris dataset
+from sklearn.datasets import load_iris
+iris_data = load_iris(as_frame=True)
+df = iris_data.frame
+
+print(df.head())
+
+grouped = df.groupby('target')
+print(" \n basic Statistical detail : \n")
+for name,group in grouped:
+    print(f"Species : {iris_data.target_names[name]}")
+    print(group.describe())
+    print("\n" + "-"*50 + "\n")

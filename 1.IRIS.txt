@@ -1,0 +1,44 @@
+import pandas as pd
+
+df=pd.read_csv("C:/Users/manish patil/Downloads/iris.csv")
+
+print(df.head())
+
+print(df.describe())
+
+print(df.shape)
+
+print(df.isnull())
+
+# Go through each column in the DataFrame
+for column in df.columns:
+
+    # If the column has text data
+    if df[column].dtype == 'object':
+        
+        # If all values are numbers (but stored as text)
+        if df[column].str.isnumeric().all():
+            df[column] = df[column].astype(int)  # Convert to integer
+
+        # If all values are 'True' or 'False' (case insensitive)
+        elif df[column].str.lower().isin(['true', 'false']).all():
+            df[column] = df[column].map({'True': True, 'False': False})  # Convert to Boolean
+
+        # Otherwise, treat it as a category (e.g., colors, names, etc.)
+        else:
+            df[column] = df[column].astype('category')
+
+    # If the column already contains integers
+    elif df[column].dtype == 'int':
+        df[column] = df[column].astype(int)
+
+    # If the column contains decimal numbers
+    elif df[column].dtype == 'float':
+        df[column] = df[column].astype(float)
+
+# Print the final data types of each column
+print(df.dtypes)
+
+df['Species_code'] = df['Species'].astype('category').cat.codes
+
+print(df)

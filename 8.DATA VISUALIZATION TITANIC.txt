@@ -1,0 +1,54 @@
+import seaborn as sns
+import matplotlib.pyplot as plt
+import pandas as pd
+
+sns.set_theme(style="whitegrid")
+plt.figure(figsize=(12, 10))
+
+titanic = sns.load_dataset('titanic')
+
+print("Dataset shape:", titanic.shape)
+print("\nDataset columns:", titanic.columns.tolist())
+print("\nFirst few rows of the dataset:")
+print(titanic.head())
+print("\nBasic statistics of the dataset:")
+print(titanic.describe())
+print("\nMissing values in each column:")
+print(titanic.isnull().sum())
+
+plt.figure(figsize=(10, 6))
+sns.histplot(data=titanic, x='fare', bins=25)
+plt.title('Distribution of Passenger Fares on Titanic', fontsize=16)
+plt.xlabel('Fare (in pounds)', fontsize=12)
+plt.ylabel('Frequency', fontsize=12)
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(12, 6))
+sns.boxplot(x='class', y='fare', data=titanic)
+plt.title('Fare Distribution by Passenger Class', fontsize=16)
+plt.xlabel('Passenger Class', fontsize=12)
+plt.ylabel('Fare (in pounds)', fontsize=12)
+plt.grid(True, alpha=0.9)
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(10, 6))
+sns.violinplot(x='survived', y='fare', data=titanic)
+plt.title('Fare Distribution by Survival Status', fontsize=16)
+plt.xlabel('Survived (0 = No, 1 = Yes)', fontsize=12)
+plt.ylabel('Fare (in pounds)', fontsize=12)
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(12, 6))
+sns.boxplot(x='class', y='fare', hue='sex', data=titanic)
+plt.title('Fare Distribution by Passenger Class and Gender', fontsize=16)
+plt.xlabel('Passenger Class', fontsize=12)
+plt.ylabel('Fare (in pounds)', fontsize=12)
+plt.grid(True, alpha=0.3)
+plt.legend(title='Gender')
+plt.tight_layout()
+plt.show()

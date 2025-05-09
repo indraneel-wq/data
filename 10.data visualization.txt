@@ -1,0 +1,52 @@
+#Step 1: Import Libraries & Load Dataset
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+
+url = "https://raw.githubusercontent.com/kcncell/Iris_dataset/main/Irisdataset.csv"
+df = pd.read_csv(url)
+
+print(df.head())
+
+#Step 2: Display few rows of the dataset
+print("Initial Dataset:")
+print(df.head())
+
+#Step 3: List Features and Their Types
+print("Feature Types:")
+print(df.dtypes)
+
+features=df.columns.drop(["Id", "Species"])
+print("Numeric Features:")
+print(list(features))
+print("Nominal Features:")
+print(["Species"])
+
+#Step 4: Histogram for Each Feature
+# Set plot style
+sns.set(style="whitegrid")
+
+# Plot histograms for numeric features
+df[features].hist(bins=20, figsize=(12, 8), color='skyblue', edgecolor='black')
+plt.suptitle("Histogram of Each Numeric Feature", fontsize=16)
+plt.tight_layout()
+plt.show()
+
+
+
+
+#Step 5: Boxplot for Each Feature
+plt.figure(figsize=(12, 8))
+for i, col in enumerate(features, 1):
+    plt.subplot(2, 2, i)
+    sns.boxplot(y=df[col], color='lightgreen')
+    plt.title(f'Boxplot of {col}')
+plt.tight_layout()
+plt.show()
+
+#Step 6: Compare Distributions and Identify Outliers
+# Description for distribution comparison
+print("Feature Distribution Summary:\n")
+print(df[features].describe())
